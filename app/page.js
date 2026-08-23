@@ -6,7 +6,7 @@ import { useShop } from '@/context/ShopContext';
 import ProductCard from '@/components/ProductCard';
 
 export default function HomePage() {
-    const { catalog } = useShop();
+    const { catalog, isLoadingCatalog } = useShop();
     const productList = Object.values(catalog).slice(0, 6);
 
     return (
@@ -88,11 +88,17 @@ export default function HomePage() {
                         <h2 className="section-title">Đồ Decor Nổi Bật</h2>
                     </div>
 
-                    <div className="products-grid">
-                        {productList.map(product => (
-                            <ProductCard key={product.id} product={product} />
-                        ))}
-                    </div>
+                    {isLoadingCatalog ? (
+                        <div style={{ textAlign: 'center', padding: '40px 0', color: '#666' }}>
+                            <p>Đang tải danh sách sản phẩm từ Supabase...</p>
+                        </div>
+                    ) : (
+                        <div className="products-grid">
+                            {productList.map(product => (
+                                <ProductCard key={product.id} product={product} />
+                            ))}
+                        </div>
+                    )}
                 </div>
             </section>
         </main>

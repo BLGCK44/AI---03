@@ -46,13 +46,21 @@ export default function ProductDetailPage() {
                         {/* Left Gallery Images */}
                         <div className="product-gallery">
                             <div className="main-image-box">
-                                <span className="badge badge-hot detail-badge">{product.badge || 'Hot'}</span>
+                                {product.badge && <span className={`badge ${product.badge === 'Mới' ? 'badge-new' : 'badge-hot'} detail-badge`}>{product.badge}</span>}
                                 <img src={product.image} alt={product.title} className="detail-main-img" />
                             </div>
-                            <div className="thumb-images-grid">
-                                <img src={product.image} alt="Góc chụp 1" className="thumb-img active" />
-                                <img src={product.image} alt="Góc chụp 2" className="thumb-img" />
-                            </div>
+                            {product.images && product.images.length > 1 && (
+                                <div className="thumb-images-grid">
+                                    {product.images.map((img, idx) => (
+                                        <img
+                                            key={idx}
+                                            src={img}
+                                            alt={`Góc chụp ${idx + 1}`}
+                                            className={`thumb-img ${idx === 0 ? 'active' : ''}`}
+                                        />
+                                    ))}
+                                </div>
+                            )}
                         </div>
 
                         {/* Right Product Information */}

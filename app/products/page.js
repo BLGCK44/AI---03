@@ -7,7 +7,7 @@ import ProductCard from '@/components/ProductCard';
 import Breadcrumb from '@/components/Breadcrumb';
 
 function ProductsContent() {
-    const { catalog } = useShop();
+    const { catalog, categories, isLoadingCatalog } = useShop();
     const searchParams = useSearchParams();
 
     const [activeCategory, setActiveCategory] = useState('all');
@@ -48,6 +48,13 @@ function ProductsContent() {
         setSearchQuery('');
         setSortOption('default');
     };
+
+    const categoryList = categories.length > 0 ? categories : [
+        { slug: 'gom-su', name: 'Gốm Sứ Thủ Công' },
+        { slug: 'nen-thom', name: 'Nến Thơm Tự Nhiên' },
+        { slug: 'do-det', name: 'Thảm Macrame' },
+        { slug: 'do-go', name: 'Đồ Gỗ Decor' }
+    ];
 
     return (
         <main id="main-content">
@@ -101,30 +108,15 @@ function ProductsContent() {
                                 >
                                     Tất cả ({allProducts.length})
                                 </button>
-                                <button
-                                    className={`category-tab ${activeCategory === 'gom-su' ? 'active' : ''}`}
-                                    onClick={() => setActiveCategory('gom-su')}
-                                >
-                                    Gốm Sứ Thủ Công
-                                </button>
-                                <button
-                                    className={`category-tab ${activeCategory === 'nen-thom' ? 'active' : ''}`}
-                                    onClick={() => setActiveCategory('nen-thom')}
-                                >
-                                    Nến Thơm Tự Nhiên
-                                </button>
-                                <button
-                                    className={`category-tab ${activeCategory === 'do-det' ? 'active' : ''}`}
-                                    onClick={() => setActiveCategory('do-det')}
-                                >
-                                    Thảm Macrame
-                                </button>
-                                <button
-                                    className={`category-tab ${activeCategory === 'do-go' ? 'active' : ''}`}
-                                    onClick={() => setActiveCategory('do-go')}
-                                >
-                                    Đồ Gỗ Decor
-                                </button>
+                                {categoryList.map(cat => (
+                                    <button
+                                        key={cat.slug}
+                                        className={`category-tab ${activeCategory === cat.slug ? 'active' : ''}`}
+                                        onClick={() => setActiveCategory(cat.slug)}
+                                    >
+                                        {cat.name}
+                                    </button>
+                                ))}
                             </div>
 
                             {/* Sorting Dropdown */}
@@ -146,8 +138,15 @@ function ProductsContent() {
                         </div>
                     </div>
 
+                    {/* Loading state */}
+                    {isLoadingCatalog && (
+                        <div style={{ textAlign: 'center', padding: '50px 0', color: '#666' }}>
+                            <p>Đang tải danh sách sản phẩm từ Supabase...</p>
+                        </div>
+                    )}
+
                     {/* No Results State Message */}
-                    {sortedProducts.length === 0 && (
+                    {!isLoadingCatalog && sortedProducts.length === 0 && (
                         <div className="no-results-msg" style={{ display: 'flex' }}>
                             <div className="no-results-icon">
                                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
@@ -165,7 +164,7 @@ function ProductsContent() {
                     )}
 
                     {/* Products Grid */}
-                    {sortedProducts.length > 0 && (
+                    {!isLoadingCatalog && sortedProducts.length > 0 && (
                         <div className="products-grid">
                             {sortedProducts.map(product => (
                                 <ProductCard key={product.id} product={product} />

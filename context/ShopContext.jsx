@@ -2,144 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-const INITIAL_CATALOG = {
-    'p1': {
-        id: 'p1',
-        title: 'Bình Gốm Mộc Thổ Cảm',
-        category: 'Gốm Sứ Thủ Công',
-        catKey: 'gom-su',
-        priceNum: 450000,
-        price: '450.000đ',
-        oldPrice: '520.000đ',
-        badge: 'Bán chạy',
-        image: '/assets/binh-gom-tho-cam.jpg',
-        desc: 'Bình gốm mộc được chế tác thủ công 100% từ đất sét nung tự nhiên với bề mặt nhám thô mộc thổ cảm. Thích hợp cắm hoa pampas, cành khô trang trí phòng khách và bàn làm việc.',
-        reviews: '(24 đánh giá của khách hàng)',
-        specs: {
-            material: 'Đất sét nung tự nhiên, phủ men thổ cảm mộc',
-            size: '18 cm (Rộng) x 25 cm (Cao)'
-        }
-    },
-    'p2': {
-        id: 'p2',
-        title: 'Nến Thơm Đậu Nành Amber',
-        category: 'Nến Thơm Tự Nhiên',
-        catKey: 'nen-thom',
-        priceNum: 290000,
-        price: '290.000đ',
-        oldPrice: '',
-        badge: 'Mới',
-        image: '/assets/nen-thom-dau-nanh.jpg',
-        desc: 'Nến thơm từ 100% sáp đậu nành thực vật nguyên chất kết hợp tinh dầu thiên nhiên (Hổ phách & Gỗ đàn hương). Hũ thuỷ tinh amber nắp gỗ tinh tế, thời gian đốt lên đến 45 giờ.',
-        reviews: '(18 đánh giá của khách hàng)',
-        specs: {
-            material: 'Sáp đậu nành thực vật, hũ thuỷ tinh hổ phách, nắp gỗ sồi',
-            size: 'Trọng lượng: 220g (Thời gian đốt ~45h)'
-        }
-    },
-    'p3': {
-        id: 'p3',
-        title: 'Thảm Macrame Dệt Tay',
-        category: 'Đồ Trang Trí Dệt',
-        catKey: 'do-det',
-        priceNum: 380000,
-        price: '380.000đ',
-        oldPrice: '450.000đ',
-        badge: 'Hot',
-        image: '/assets/tham-macrame.jpg',
-        desc: 'Thảm treo tường dệt tay phong cách Bohemian được đan tỉ mỉ từ sợi cotton mộc tự nhiên gắn trên cành gỗ mộc. Điểm nhấn hoàn hảo cho mảng tường phòng ngủ và góc đọc sách.',
-        reviews: '(31 đánh giá của khách hàng)',
-        specs: {
-            material: 'Sợi cotton mộc 100%, cành gỗ tự nhiên',
-            size: '40 cm (Rộng) x 70 cm (Dài)'
-        }
-    },
-    'p4': {
-        id: 'p4',
-        title: 'Khay Gỗ Sồi Decor Tự Nhiên',
-        category: 'Đồ Gỗ Decor',
-        catKey: 'do-go',
-        priceNum: 320000,
-        price: '320.000đ',
-        oldPrice: '',
-        badge: 'Mới',
-        image: '/assets/khay-go-decor.jpg',
-        desc: 'Khay gỗ sồi nguyên khối cắt gọt đường nét bo tròn mềm mại, bề mặt xử lý dầu lau thực vật an toàn. Dùng đựng nến thơm, hũ gốm hoặc phục vụ trà chiều tinh tế.',
-        reviews: '(14 đánh giá của khách hàng)',
-        specs: {
-            material: 'Gỗ sồi nhập khẩu cao cấp, lau dầu thực vật',
-            size: '30 cm x 20 cm x 2.5 cm'
-        }
-    },
-    'p5': {
-        id: 'p5',
-        title: 'Cốc Gốm Chấm Thổ Cảm',
-        category: 'Gốm Sứ Thủ Công',
-        catKey: 'gom-su',
-        priceNum: 180000,
-        price: '180.000đ',
-        oldPrice: '',
-        badge: 'Bán chạy',
-        image: '/assets/coc-gom-tho-cam.jpg',
-        desc: 'Cốc gốm xoay tay hoạ tiết chấm thủ công màu kem sữa ấm áp. Men hỏa biến tự nhiên cho cảm giác cầm nắm chắc tay, dùng uống cà phê, trà chiều thư giãn.',
-        reviews: '(42 đánh giá của khách hàng)',
-        specs: {
-            material: 'Gốm men hỏa biến tự nhiên',
-            size: 'Dung tích: 350ml'
-        }
-    },
-    'p6': {
-        id: 'p6',
-        title: 'Bình Gốm Dáng Cổ Thô Mộc',
-        category: 'Gốm Sứ Thủ Công',
-        catKey: 'gom-su',
-        priceNum: 520000,
-        price: '520.000đ',
-        oldPrice: '',
-        badge: 'Mới',
-        image: '/assets/binh-gom-tho-cam.jpg',
-        desc: 'Bình gốm thủ công dáng cổ điển với chất men thô nhám độc bản, tạo vẻ đẹp vượt thời gian cho không gian sống hiện đại.',
-        reviews: '(9 đánh giá của khách hàng)',
-        specs: {
-            material: 'Đất sét thô mộc nung nhiệt độ cao',
-            size: '20 cm x 30 cm'
-        }
-    },
-    'p7': {
-        id: 'p7',
-        title: 'Nến Thơm Gỗ Tuyết Tùng',
-        category: 'Nến Thơm Tự Nhiên',
-        catKey: 'nen-thom',
-        priceNum: 340000,
-        price: '340.000đ',
-        oldPrice: '390.000đ',
-        badge: 'Hot',
-        image: '/assets/nen-thom-dau-nanh.jpg',
-        desc: 'Nến thơm hương gỗ tuyết tùng và thông ấm áp, mang không khí rừng nguyên sinh thanh bình vào căn phòng của bạn.',
-        reviews: '(22 đánh giá của khách hàng)',
-        specs: {
-            material: 'Sáp thực vật, bấc gỗ nhập khẩu',
-            size: 'Trọng lượng: 250g'
-        }
-    },
-    'p8': {
-        id: 'p8',
-        title: 'Khay Gỗ Tròn Decor Trà',
-        category: 'Đồ Gỗ Decor',
-        catKey: 'do-go',
-        priceNum: 260000,
-        price: '260.000đ',
-        oldPrice: '',
-        badge: 'Mới',
-        image: '/assets/khay-go-decor.jpg',
-        desc: 'Khay gỗ tròn thiết kế tối giản, hoa văn vân gỗ sồi tự nhiên sang trọng.',
-        reviews: '(16 đánh giá của khách hàng)',
-        specs: {
-            material: 'Gỗ sồi nguyên khối',
-            size: 'Đường kính: 25 cm'
-        }
-    }
-};
+import { createClient } from '@/utils/supabase/client';
 
 const INITIAL_ORDERS = [
     {
@@ -181,18 +44,78 @@ const INITIAL_ORDERS = [
 ];
 
 export function formatVND(amount) {
-    return (amount || 0).toLocaleString('vi-VN') + 'đ';
+    if (amount === undefined || amount === null) return '';
+    return amount.toLocaleString('vi-VN') + 'đ';
 }
 
 const ShopContext = createContext();
 
 export function ShopProvider({ children }) {
-    const [catalog, setCatalog] = useState(INITIAL_CATALOG);
+    const [catalog, setCatalog] = useState({});
+    const [categories, setCategories] = useState([]);
+    const [isLoadingCatalog, setIsLoadingCatalog] = useState(true);
     const [cart, setCart] = useState([]);
     const [wishlist, setWishlist] = useState([]);
     const [user, setUser] = useState(null);
     const [orders, setOrders] = useState(INITIAL_ORDERS);
     const [toasts, setToasts] = useState([]);
+
+    // Fetch products and categories from Supabase
+    useEffect(() => {
+        async function fetchFromSupabase() {
+            try {
+                setIsLoadingCatalog(true);
+                const supabase = createClient();
+
+                // 1. Fetch categories
+                const { data: catData, error: catErr } = await supabase
+                    .from('categories')
+                    .select('*')
+                    .order('created_at', { ascending: true });
+
+                const catMap = {};
+                if (!catErr && catData) {
+                    setCategories(catData);
+                    catData.forEach(c => {
+                        catMap[c.slug] = c.name;
+                    });
+                }
+
+                // 2. Fetch products
+                const { data: prodData, error: prodErr } = await supabase
+                    .from('products')
+                    .select('*')
+                    .order('created_at', { ascending: true });
+
+                if (!prodErr && prodData) {
+                    const catalogMap = {};
+                    prodData.forEach(item => {
+                        catalogMap[item.id] = {
+                            id: item.id,
+                            title: item.title,
+                            category: catMap[item.category_slug] || item.category_slug,
+                            catKey: item.category_slug,
+                            priceNum: item.price,
+                            price: formatVND(item.price),
+                            oldPrice: item.old_price ? formatVND(item.old_price) : '',
+                            badge: item.badge || '',
+                            image: item.image,
+                            desc: item.description,
+                            reviews: item.reviews_count ? `(${item.reviews_count} đánh giá của khách hàng)` : '(0 đánh giá)',
+                            specs: item.specs || {}
+                        };
+                    });
+                    setCatalog(catalogMap);
+                }
+            } catch (err) {
+                console.error('Error fetching Supabase data:', err);
+            } finally {
+                setIsLoadingCatalog(false);
+            }
+        }
+
+        fetchFromSupabase();
+    }, []);
 
     // Load state from localStorage on client side mount
     useEffect(() => {
@@ -237,7 +160,7 @@ export function ShopProvider({ children }) {
     };
 
     const addToCart = (productId, qty = 1) => {
-        const item = catalog[productId] || INITIAL_CATALOG[productId];
+        const item = catalog[productId];
         if (!item) return;
 
         const existingIndex = cart.findIndex(c => c.id === productId);
@@ -280,7 +203,7 @@ export function ShopProvider({ children }) {
     };
 
     const toggleWishlist = (productId) => {
-        const item = catalog[productId] || INITIAL_CATALOG[productId] || { title: 'Sản phẩm' };
+        const item = catalog[productId] || { title: 'Sản phẩm' };
         let newWishlist = [...wishlist];
         if (newWishlist.includes(productId)) {
             newWishlist = newWishlist.filter(id => id !== productId);
@@ -307,21 +230,64 @@ export function ShopProvider({ children }) {
         showToast('Đã đăng xuất thành công.');
     };
 
-    const saveProduct = (productObj) => {
+    const saveProduct = async (productObj) => {
+        // Update local React state immediately
         setCatalog(prev => ({
             ...prev,
             [productObj.id]: productObj
         }));
+
+        // Persist change to Supabase database
+        try {
+            const supabase = createClient();
+            const payload = {
+                id: productObj.id,
+                title: productObj.title,
+                category_slug: productObj.catKey || 'gom-su',
+                price: productObj.priceNum,
+                old_price: productObj.oldPrice ? parseInt(productObj.oldPrice.replace(/\D/g, ''), 10) || null : null,
+                badge: productObj.badge || '',
+                image: productObj.image,
+                description: productObj.desc || '',
+                specs: productObj.specs || {}
+            };
+
+            const { error } = await supabase
+                .from('products')
+                .upsert(payload, { onConflict: 'id' });
+
+            if (error) {
+                console.error('Lỗi khi lưu sản phẩm lên Supabase:', error);
+            }
+        } catch (err) {
+            console.error('Error saving product to Supabase:', err);
+        }
     };
 
-    const deleteProduct = (productId) => {
+    const deleteProduct = async (productId) => {
         const item = catalog[productId];
         setCatalog(prev => {
             const copy = { ...prev };
             delete copy[productId];
             return copy;
         });
-        if (item) showToast(`Đã xóa sản phẩm "${item.title}" khỏi cửa hàng.`);
+
+        // Delete from Supabase database
+        try {
+            const supabase = createClient();
+            const { error } = await supabase
+                .from('products')
+                .delete()
+                .eq('id', productId);
+
+            if (error) {
+                console.error('Lỗi khi xóa sản phẩm trên Supabase:', error);
+            } else if (item) {
+                showToast(`Đã xóa sản phẩm "${item.title}" khỏi Supabase.`);
+            }
+        } catch (err) {
+            console.error('Error deleting product from Supabase:', err);
+        }
     };
 
     const updateOrderStatus = (index, newStatus) => {
@@ -345,6 +311,8 @@ export function ShopProvider({ children }) {
     return (
         <ShopContext.Provider value={{
             catalog,
+            categories,
+            isLoadingCatalog,
             cart,
             cartCount,
             cartSubtotal,
