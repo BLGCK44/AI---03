@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useShop, formatVND } from '@/context/ShopContext';
@@ -8,6 +8,21 @@ import { useShop, formatVND } from '@/context/ShopContext';
 export default function AdminPage() {
     const router = useRouter();
     const { catalog, orders, user, logout, saveProduct, deleteProduct, updateOrderStatus, showToast } = useShop();
+
+    const [isMounted, setIsMounted] = useState(false);
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
+    useEffect(() => {
+        if (isMounted) {
+            if (!user || user.role !== 'admin') {
+                showToast('Vui lòng đăng nhập quyền Quản trị viên để truy cập!');
+                router.push('/login');
+            }
+        }
+    }, [isMounted, user, router, showToast]);
 
     const [activeTab, setActiveTab] = useState('overview'); // 'overview', 'products', 'orders'
 
@@ -22,6 +37,15 @@ export default function AdminPage() {
     const [formOldPrice, setFormOldPrice] = useState('');
     const [formImage, setFormImage] = useState('/assets/binh-gom-tho-cam.jpg');
     const [formDesc, setFormDesc] = useState('');
+
+    if (!isMounted || !user || user.role !== 'admin') {
+        return (
+            <div style={{ textAlign: 'center', padding: '100px 20px', color: '#64748B' }}>
+                <h2>Đang kiểm tra quyền truy cập...</h2>
+                <p>Bạn sẽ được tự động chuyển hướng đến trang đăng nhập nếu chưa có quyền Quản trị viên.</p>
+            </div>
+        );
+    }
 
     const openAddModal = () => {
         setEditId('');

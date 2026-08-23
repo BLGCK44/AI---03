@@ -102,10 +102,30 @@ export function ShopProvider({ children }) {
                             image: item.image,
                             desc: item.description,
                             reviews: item.reviews_count ? `(${item.reviews_count} đánh giá của khách hàng)` : '(0 đánh giá)',
-                            specs: item.specs || {}
                         };
                     });
                     setCatalog(catalogMap);
+                }
+
+                // 3. Fetch orders
+                const { data: orderData, error: orderErr } = await supabase
+                    .from('orders')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (!orderErr && orderData && orderData.length > 0) {
+                    const mappedOrders = orderData.map(item => ({
+                        id: item.id,
+                        code: item.code,
+                        customer: item.customer_name,
+                        phone: item.customer_phone,
+                        itemsStr: 'Sản phẩm trang trí & decor',
+                        totalAmount: item.total_amount,
+                        totalFormatted: formatVND(item.total_amount),
+                        payment: item.payment_method || 'COD (Tiền mặt)',
+                        status: item.status || 'pending'
+                    }));
+                    setOrders(mappedOrders);
                 }
             } catch (err) {
                 console.error('Error fetching Supabase data:', err);
@@ -290,17 +310,49 @@ export function ShopProvider({ children }) {
         }
     };
 
-    const updateOrderStatus = (index, newStatus) => {
+    const updateOrderStatus = async (index, newStatus) => {
+        const targetOrder = orders[index];
         setOrders(prev => {
             const next = [...prev];
             next[index] = { ...next[index], status: newStatus };
             return next;
         });
-        showToast(`Đã cập nhật trạng thái đơn ${orders[index]?.code}`);
+
+        if (targetOrder) {
+            showToast(`Đã cập nhật trạng thái đơn ${targetOrder.code}`);
+            try {
+                const supabase = createClient();
+                await supabase
+                    .from('orders')
+                    .update({ status: newStatus })
+                    .eq('code', targetOrder.code);
+            } catch (err) {
+                console.error('Error updating order status in Supabase:', err);
+            }
+        }
     };
 
-    const addOrder = (newOrderObj) => {
+    const addOrder = async (newOrderObj) => {
         setOrders(prev => [newOrderObj, ...prev]);
+
+        try {
+            const supabase = createClient();
+            const payload = {
+                code: newOrderObj.code,
+                customer_name: newOrderObj.customer,
+                customer_phone: newOrderObj.phone,
+                total_amount: newOrderObj.totalAmount || parseInt((newOrderObj.totalFormatted || '').replace(/\D/g, ''), 10) || 0,
+                payment_method: newOrderObj.payment || 'COD (Tiền mặt)',
+                status: newOrderObj.status || 'pending'
+            };
+
+            const { error } = await supabase.from('orders').insert([payload]);
+            if (error) {
+                console.error('Error inserting order to Supabase:', error);
+            }
+        } catch (err) {
+            console.error('Error adding order to Supabase:', err);
+        }
     };
 
     const cartCount = cart.reduce((sum, item) => sum + item.qty, 0);

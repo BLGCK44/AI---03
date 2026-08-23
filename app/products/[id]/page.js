@@ -101,7 +101,17 @@ export default function ProductDetailPage() {
                             <div className="product-cta-row">
                                 <div className="quantity-selector">
                                     <button type="button" className="qty-btn" onClick={() => setQty(Math.max(1, qty - 1))}>-</button>
-                                    <input type="number" className="qty-input" value={qty} onChange={(e) => setQty(Math.max(1, parseInt(e.target.value, 10) || 1))} min="1" max="99" readOnly />
+                                    <input
+                                        type="number"
+                                        className="qty-input"
+                                        value={qty}
+                                        onChange={(e) => {
+                                            const val = parseInt(e.target.value, 10);
+                                            setQty(isNaN(val) || val < 1 ? 1 : val);
+                                        }}
+                                        min="1"
+                                        max="99"
+                                    />
                                     <button type="button" className="qty-btn" onClick={() => setQty(qty + 1)}>+</button>
                                 </div>
 
