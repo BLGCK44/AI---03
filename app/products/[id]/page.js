@@ -15,7 +15,8 @@ export default function ProductDetailPage() {
     const product = catalog[productId] || catalog['p1'];
     const [qty, setQty] = useState(1);
     const [ratingStars, setRatingStars] = useState('5');
-    const [reviewsList, setReviewsList] = useState([
+
+    const defaultReviews = [
         {
             id: 1,
             name: 'Nguyễn Thị Thu',
@@ -30,7 +31,31 @@ export default function ProductDetailPage() {
             date: '1 tuần trước',
             comment: 'Gốm mộc màu tự nhiên rất đẹp, để góc bàn làm việc ngắm thư giãn vô cùng.'
         }
-    ]);
+    ];
+
+    const [reviewsList, setReviewsList] = useState(defaultReviews);
+
+    // Load saved reviews from localStorage on client mount
+    useEffect(() => {
+        try {
+            const stored = localStorage.getItem(`moc_gom_reviews_${productId}`);
+            if (stored) {
+                setReviewsList(JSON.parse(stored));
+            } else {
+                setReviewsList(defaultReviews);
+            }
+        } catch (e) {}
+    }, [productId]);
+
+    const saveReview = (newReview) => {
+        setReviewsList(prev => {
+            const updated = [newReview, ...prev];
+            try {
+                localStorage.setItem(`moc_gom_reviews_${productId}`, JSON.stringify(updated));
+            } catch (e) {}
+            return updated;
+        });
+    };
 
     if (!product) {
         return (
@@ -180,16 +205,13 @@ export default function ProductDetailPage() {
                                 const comment = form.reviewerComment.value.trim();
                                 if (!name || !comment) return;
 
-                                setReviewsList(prev => [
-                                    {
-                                        id: Date.now(),
-                                        name,
-                                        rating: parseInt(ratingStars, 10),
-                                        date: 'Vừa xong',
-                                        comment
-                                    },
-                                    ...prev
-                                ]);
+                                saveReview({
+                                    id: Date.now(),
+                                    name,
+                                    rating: parseInt(ratingStars, 10),
+                                    date: 'Vừa xong',
+                                    comment
+                                });
 
                                 form.reset();
                                 showToast('Cảm ơn bạn đã gửi đánh giá sản phẩm!');

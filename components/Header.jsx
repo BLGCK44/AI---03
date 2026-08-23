@@ -89,8 +89,8 @@ export default function Header() {
                             <li><Link href="/" className={`nav-link ${pathname === '/' ? 'active' : ''}`}>Trang chủ</Link></li>
                             <li><Link href="/products" className={`nav-link ${pathname === '/products' ? 'active' : ''}`}>Sản phẩm</Link></li>
                             <li><Link href="/wishlist" className={`nav-link ${pathname === '/wishlist' ? 'active' : ''}`}>Yêu thích</Link></li>
-                            <li><Link href="/#about" className="nav-link">Giới thiệu</Link></li>
-                            <li><Link href="/#contact" className="nav-link">Liên hệ</Link></li>
+                            <li><Link href="/about" className={`nav-link ${pathname === '/about' ? 'active' : ''}`}>Giới thiệu</Link></li>
+                            <li><Link href="/contact" className={`nav-link ${pathname === '/contact' ? 'active' : ''}`}>Liên hệ</Link></li>
                         </ul>
                     </nav>
 
@@ -167,8 +167,8 @@ export default function Header() {
                         <Link href="/wishlist" className={`mobile-nav-link ${pathname === '/wishlist' ? 'active' : ''}`} onClick={() => setIsDrawerOpen(false)}>Sản phẩm yêu thích</Link>
                         <Link href="/cart" className={`mobile-nav-link ${pathname === '/cart' ? 'active' : ''}`} onClick={() => setIsDrawerOpen(false)}>Giỏ hàng của bạn</Link>
                         <Link href="/login" className={`mobile-nav-link ${pathname === '/login' ? 'active' : ''}`} onClick={() => setIsDrawerOpen(false)}>Đăng nhập / Đăng ký</Link>
-                        <Link href="/#about" className="mobile-nav-link" onClick={() => setIsDrawerOpen(false)}>Câu chuyện thương hiệu</Link>
-                        <Link href="/#contact" className="mobile-nav-link" onClick={() => setIsDrawerOpen(false)}>Liên hệ & Cửa hàng</Link>
+                        <Link href="/about" className={`mobile-nav-link ${pathname === '/about' ? 'active' : ''}`} onClick={() => setIsDrawerOpen(false)}>Câu chuyện thương hiệu</Link>
+                        <Link href="/contact" className={`mobile-nav-link ${pathname === '/contact' ? 'active' : ''}`} onClick={() => setIsDrawerOpen(false)}>Liên hệ & Cửa hàng</Link>
                     </nav>
                 </div>
             </div>

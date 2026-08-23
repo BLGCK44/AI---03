@@ -101,6 +101,52 @@ export default function HomePage() {
                     )}
                 </div>
             </section>
+
+            {/* 4. Brand Story Section (#about) */}
+            <section className="about-home-section" id="about" style={{ padding: '60px 0', background: '#F8FAFC', borderTop: '1px solid #E2E8F0' }}>
+                <div className="container">
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '36px', alignItems: 'center' }}>
+                        <div>
+                            <span className="section-subtitle" style={{ color: '#C05621' }}>CÂU CHUYỆN THƯƠNG HIỆU</span>
+                            <h2 className="section-title" style={{ fontSize: '26px', marginTop: '6px', marginBottom: '16px' }}>Về Shop Sley & Nghệ Thuật Mộc Mạc</h2>
+                            <p style={{ color: '#475569', lineHeight: '1.7', marginBottom: '16px' }}>
+                                Shop Sley được truyền cảm hứng từ khát khao mang không gian sống ấm áp, tinh tế và gần gũi với thiên nhiên đến từng gia đình Việt.
+                            </p>
+                            <Link href="/about" className="btn btn-primary btn-sm">Xem chi tiết câu chuyện</Link>
+                        </div>
+                        <div style={{ borderRadius: '12px', overflow: 'hidden' }}>
+                            <img src="/assets/hero-banner.jpg" alt="Về Shop Sley" style={{ width: '100%', height: 'auto', display: 'block' }} />
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* 5. Quick Contact Section (#contact) */}
+            <section className="contact-home-section" id="contact" style={{ padding: '60px 0', borderTop: '1px solid #E2E8F0' }}>
+                <div className="container">
+                    <div className="section-header" style={{ textAlign: 'center', marginBottom: '32px' }}>
+                        <span className="section-subtitle">GHÉ THĂM CỬA HÀNG</span>
+                        <h2 className="section-title">Liên Hệ & Showroom Shop Sley</h2>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '20px' }}>
+                        <div style={{ padding: '24px', background: '#fff', borderRadius: '12px', border: '1px solid #E2E8F0', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+                            <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#1E293B', marginBottom: '8px' }}>📍 Địa Chỉ Showroom</h3>
+                            <p style={{ color: '#64748B', margin: 0, fontSize: '14px' }}>123 Phố Cổ, Q. Hoàn Kiếm, Hà Nội</p>
+                        </div>
+
+                        <div style={{ padding: '24px', background: '#fff', borderRadius: '12px', border: '1px solid #E2E8F0', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+                            <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#1E293B', marginBottom: '8px' }}>📞 Hotline Tư Vấn</h3>
+                            <p style={{ color: '#64748B', margin: 0, fontSize: '14px' }}>0908 123 456 (08:00 - 21:30)</p>
+                        </div>
+
+                        <div style={{ padding: '24px', background: '#fff', borderRadius: '12px', border: '1px solid #E2E8F0', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+                            <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#1E293B', marginBottom: '8px' }}>✉️ Email Hỗ Trợ</h3>
+                            <p style={{ color: '#64748B', margin: 0, fontSize: '14px' }}>contact@shopsley.vn</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </main>
     );
 }
