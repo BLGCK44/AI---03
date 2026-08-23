@@ -93,7 +93,7 @@ export default function LoginPage() {
                                     type="text"
                                     id="login-email"
                                     className="form-control"
-                                    placeholder="user@gmail.com hoặc admin@mocgom.vn"
+                                    placeholder="Nhập email của bạn..."
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     required
@@ -117,18 +117,6 @@ export default function LoginPage() {
                                 Đăng Nhập
                             </button>
                         </form>
-
-                        <div className="demo-accounts-box">
-                            <span className="demo-title">💡 Đăng nhập nhanh Demo (1-Click):</span>
-                            <div className="demo-btns-group">
-                                <button type="button" className="btn btn-outline btn-sm" onClick={handleFillUserDemo}>
-                                    Khách Hàng (User)
-                                </button>
-                                <button type="button" className="btn btn-secondary btn-sm" onClick={handleFillAdminDemo}>
-                                    Quản Trị Viên (Admin)
-                                </button>
-                            </div>
-                        </div>
 
                         <div className="auth-footer-link">
                             Chưa có tài khoản? <Link href="/register">Đăng ký tài khoản mới</Link>
