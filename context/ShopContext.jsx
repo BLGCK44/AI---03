@@ -87,7 +87,11 @@ export function ShopProvider({ children }) {
                     .select('*')
                     .order('created_at', { ascending: true });
 
-                if (!prodErr && prodData) {
+                if (prodErr) {
+                    console.error('Supabase fetch products error:', prodErr);
+                }
+
+                if (!prodErr && prodData && prodData.length > 0) {
                     const catalogMap = {};
                     prodData.forEach(item => {
                         catalogMap[item.id] = {
