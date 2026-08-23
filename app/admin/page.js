@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useShop, formatVND } from '@/context/ShopContext';
+import { createClient } from '@/utils/supabase/client';
 
 export default function AdminPage() {
     const router = useRouter();
@@ -37,6 +38,44 @@ export default function AdminPage() {
     const [formOldPrice, setFormOldPrice] = useState('');
     const [formImage, setFormImage] = useState('/assets/binh-gom-tho-cam.jpg');
     const [formDesc, setFormDesc] = useState('');
+
+    const handleFileUpload = async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        try {
+            showToast('Đang xử lý ảnh tải lên...');
+            const supabase = createClient();
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${Date.now()}_${Math.random().toString(36).substring(2, 7)}.${fileExt}`;
+            const filePath = `product_images/${fileName}`;
+
+            const { data, error } = await supabase.storage
+                .from('products')
+                .upload(filePath, file);
+
+            if (!error && data) {
+                const { data: publicUrlData } = supabase.storage.from('products').getPublicUrl(filePath);
+                if (publicUrlData?.publicUrl) {
+                    setFormImage(publicUrlData.publicUrl);
+                    showToast('Đã tải ảnh lên Supabase Storage thành công!');
+                    return;
+                }
+            }
+
+            // Fallback: Read file as Data URL
+            const reader = new FileReader();
+            reader.onload = (evt) => {
+                if (evt.target?.result) {
+                    setFormImage(evt.target.result);
+                    showToast('Đã chọn ảnh sản phẩm thành công!');
+                }
+            };
+            reader.readAsDataURL(file);
+        } catch (err) {
+            console.error('Upload error:', err);
+        }
+    };
 
     if (!isMounted || !user || user.role !== 'admin') {
         return (
@@ -493,14 +532,26 @@ export default function AdminPage() {
                             </div>
 
                             <div className="form-group">
-                                <label className="form-label">Đường dẫn ảnh sản phẩm (Assets) <span className="required">*</span></label>
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    value={formImage}
-                                    onChange={(e) => setFormImage(e.target.value)}
-                                    required
-                                />
+                                <label className="form-label">Ảnh sản phẩm <span className="required">*</span></label>
+                                <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="Tên file hoặc URL ảnh (/assets/binh-gom-tho-cam.jpg)..."
+                                        value={formImage}
+                                        onChange={(e) => setFormImage(e.target.value)}
+                                        required
+                                    />
+                                    <label className="btn btn-secondary btn-sm" style={{ cursor: 'pointer', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center' }}>
+                                        📁 Tải ảnh lên
+                                        <input type="file" accept="image/*" onChange={handleFileUpload} style={{ display: 'none' }} />
+                                    </label>
+                                </div>
+                                {formImage && (
+                                    <div style={{ marginTop: '6px' }}>
+                                        <img src={formImage} alt="Xem trước" style={{ width: '60px', height: '60px', objectFit: 'cover', borderRadius: '6px', border: '1px solid #e2e8f0' }} />
+                                    </div>
+                                )}
                             </div>
 
                             <div className="form-group">

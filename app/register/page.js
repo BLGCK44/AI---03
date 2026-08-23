@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useShop } from '@/context/ShopContext';
 import Breadcrumb from '@/components/Breadcrumb';
+import { createClient } from '@/utils/supabase/client';
 
 export default function RegisterPage() {
     const router = useRouter();
@@ -15,11 +16,37 @@ export default function RegisterPage() {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (password !== confirmPassword) {
             alert('Mật khẩu nhập lại không trùng khớp! Vui lòng kiểm tra lại.');
             return;
+        }
+
+        try {
+            const supabase = createClient();
+            const { data, error } = await supabase.auth.signUp({
+                email: email.trim(),
+                password: password,
+                options: {
+                    data: {
+                        name: fullname.trim()
+                    }
+                }
+            });
+
+            if (!error && data?.user) {
+                login({
+                    name: fullname.trim() || 'Khách Hàng',
+                    email: email.trim(),
+                    role: 'user'
+                });
+                showToast('Đăng ký tài khoản thành công trên Supabase!');
+                setTimeout(() => { router.push('/'); }, 500);
+                return;
+            }
+        } catch (err) {
+            console.error('Supabase Auth Signup Error:', err);
         }
 
         login({

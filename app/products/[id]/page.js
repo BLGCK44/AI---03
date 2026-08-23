@@ -10,10 +10,27 @@ import Breadcrumb from '@/components/Breadcrumb';
 export default function ProductDetailPage() {
     const params = useParams();
     const productId = params?.id || 'p1';
-    const { catalog, addToCart, wishlist, toggleWishlist } = useShop();
+    const { catalog, addToCart, wishlist, toggleWishlist, showToast } = useShop();
 
     const product = catalog[productId] || catalog['p1'];
     const [qty, setQty] = useState(1);
+    const [ratingStars, setRatingStars] = useState('5');
+    const [reviewsList, setReviewsList] = useState([
+        {
+            id: 1,
+            name: 'Nguyễn Thị Thu',
+            rating: 5,
+            date: '2 ngày trước',
+            comment: 'Sản phẩm hoàn thiện rất tỉ mỉ, đóng gói cẩn thận chống sốc 3 lớp. Rất hài lòng!'
+        },
+        {
+            id: 2,
+            name: 'Trần Văn Hoàng',
+            rating: 5,
+            date: '1 tuần trước',
+            comment: 'Gốm mộc màu tự nhiên rất đẹp, để góc bàn làm việc ngắm thư giãn vô cùng.'
+        }
+    ]);
 
     if (!product) {
         return (
@@ -138,6 +155,111 @@ export default function ProductDetailPage() {
                                         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
                                     </svg>
                                 </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Customer Reviews Section */}
+            <section className="reviews-section" style={{ padding: '40px 0', borderTop: '1px solid #E2E8F0', background: '#F8FAFC' }}>
+                <div className="container">
+                    <div className="section-header" style={{ marginBottom: '24px' }}>
+                        <span className="section-subtitle">ĐÁNH GIÁ TỪ KHÁCH HÀNG</span>
+                        <h2 className="section-title">Nhận Xét & Đánh Giá Sản Phẩm</h2>
+                    </div>
+
+                    <div className="reviews-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px', alignItems: 'start' }}>
+                        {/* Write a Review Form */}
+                        <div className="review-form-card" style={{ background: '#fff', padding: '24px', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+                            <h3 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '16px', color: '#1E293B' }}>Viết Đánh Giá Của Bạn</h3>
+                            <form onSubmit={(e) => {
+                                e.preventDefault();
+                                const form = e.target;
+                                const name = form.reviewerName.value.trim();
+                                const comment = form.reviewerComment.value.trim();
+                                if (!name || !comment) return;
+
+                                setReviewsList(prev => [
+                                    {
+                                        id: Date.now(),
+                                        name,
+                                        rating: parseInt(ratingStars, 10),
+                                        date: 'Vừa xong',
+                                        comment
+                                    },
+                                    ...prev
+                                ]);
+
+                                form.reset();
+                                showToast('Cảm ơn bạn đã gửi đánh giá sản phẩm!');
+                            }}>
+                                <div className="form-group" style={{ marginBottom: '12px' }}>
+                                    <label className="form-label" style={{ display: 'block', fontSize: '14px', marginBottom: '6px' }}>Đánh giá của bạn (*)</label>
+                                    <select
+                                        className="form-control"
+                                        value={ratingStars}
+                                        onChange={(e) => setRatingStars(e.target.value)}
+                                        style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #CBD5E1' }}
+                                    >
+                                        <option value="5">⭐⭐⭐⭐⭐ (5/5 sao - Rất hài lòng)</option>
+                                        <option value="4">⭐⭐⭐⭐ (4/5 sao - Hài lòng)</option>
+                                        <option value="3">⭐⭐⭐ (3/5 sao - Bình thường)</option>
+                                        <option value="2">⭐⭐ (2/5 sao - Chưa hài lòng)</option>
+                                        <option value="1">⭐ (1/5 sao - Rất kém)</option>
+                                    </select>
+                                </div>
+
+                                <div className="form-group" style={{ marginBottom: '12px' }}>
+                                    <label className="form-label" style={{ display: 'block', fontSize: '14px', marginBottom: '6px' }}>Họ và tên (*)</label>
+                                    <input
+                                        type="text"
+                                        name="reviewerName"
+                                        className="form-control"
+                                        placeholder="Ví dụ: Nguyễn Thị Mai"
+                                        required
+                                        style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #CBD5E1' }}
+                                    />
+                                </div>
+
+                                <div className="form-group" style={{ marginBottom: '16px' }}>
+                                    <label className="form-label" style={{ display: 'block', fontSize: '14px', marginBottom: '6px' }}>Nội dung nhận xét (*)</label>
+                                    <textarea
+                                        name="reviewerComment"
+                                        className="form-control"
+                                        rows="3"
+                                        placeholder="Chia sẻ cảm nhận thực tế của bạn về chất liệu, đóng gói và kiểu dáng..."
+                                        required
+                                        style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #CBD5E1' }}
+                                    ></textarea>
+                                </div>
+
+                                <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>
+                                    Gửi Đánh Giá Ngay
+                                </button>
+                            </form>
+                        </div>
+
+                        {/* Customer Reviews List */}
+                        <div className="reviews-list-card" style={{ background: '#fff', padding: '24px', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+                            <h3 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '16px', color: '#1E293B' }}>
+                                Nhận Xét Đã Gửi ({reviewsList.length})
+                            </h3>
+                            <div className="reviews-items" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                                {reviewsList.map(rev => (
+                                    <div key={rev.id} style={{ borderBottom: '1px dashed #E2E8F0', paddingBottom: '12px' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                                            <strong style={{ color: '#0F172A', fontSize: '15px' }}>{rev.name}</strong>
+                                            <span style={{ color: '#94A3B8', fontSize: '12px' }}>{rev.date}</span>
+                                        </div>
+                                        <div style={{ color: '#F59E0B', fontSize: '14px', marginBottom: '6px' }}>
+                                            {'⭐'.repeat(rev.rating)}
+                                        </div>
+                                        <p style={{ color: '#475569', fontSize: '14px', margin: 0, lineHeight: '1.5' }}>
+                                            {rev.comment}
+                                        </p>
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     </div>

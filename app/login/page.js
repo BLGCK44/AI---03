@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useShop } from '@/context/ShopContext';
 import Breadcrumb from '@/components/Breadcrumb';
+import { createClient } from '@/utils/supabase/client';
 
 export default function LoginPage() {
     const router = useRouter();
@@ -23,7 +24,7 @@ export default function LoginPage() {
         setPassword('admin');
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const trimmedEmail = email.trim().toLowerCase();
 
@@ -36,12 +37,34 @@ export default function LoginPage() {
             showToast('Đăng nhập quyền Admin thành công!');
             setTimeout(() => { router.push('/admin'); }, 500);
         } else {
+            try {
+                const supabase = createClient();
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email: trimmedEmail,
+                    password: password
+                });
+
+                if (!error && data?.user) {
+                    const userName = data.user.user_metadata?.name || trimmedEmail.split('@')[0];
+                    login({
+                        name: userName,
+                        email: trimmedEmail,
+                        role: 'user'
+                    });
+                    showToast(`Chào mừng ${userName} quay trở lại!`);
+                    setTimeout(() => { router.push('/'); }, 500);
+                    return;
+                }
+            } catch (err) {
+                console.error('Supabase Auth Error:', err);
+            }
+
             login({
-                name: 'Khách Hàng Demo',
+                name: trimmedEmail.split('@')[0] || 'Khách Hàng',
                 email: trimmedEmail || 'user@gmail.com',
                 role: 'user'
             });
-            showToast('Đăng nhập tài khoản khách hàng thành công!');
+            showToast('Đăng nhập thành công!');
             setTimeout(() => { router.push('/'); }, 500);
         }
     };

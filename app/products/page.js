@@ -43,10 +43,21 @@ function ProductsContent() {
         return 0;
     });
 
+    const ITEMS_PER_PAGE = 6;
+    const [currentPage, setCurrentPage] = useState(1);
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [activeCategory, searchQuery, sortOption]);
+
+    const totalPages = Math.ceil(sortedProducts.length / ITEMS_PER_PAGE);
+    const paginatedProducts = sortedProducts.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+
     const resetFilters = () => {
         setActiveCategory('all');
         setSearchQuery('');
         setSortOption('default');
+        setCurrentPage(1);
     };
 
     const categoryList = categories.length > 0 ? categories : [
@@ -165,11 +176,48 @@ function ProductsContent() {
 
                     {/* Products Grid */}
                     {!isLoadingCatalog && sortedProducts.length > 0 && (
-                        <div className="products-grid">
-                            {sortedProducts.map(product => (
-                                <ProductCard key={product.id} product={product} />
-                            ))}
-                        </div>
+                        <>
+                            <div className="products-grid">
+                                {paginatedProducts.map(product => (
+                                    <ProductCard key={product.id} product={product} />
+                                ))}
+                            </div>
+
+                            {/* Pagination Controls */}
+                            {totalPages > 1 && (
+                                <div className="pagination-wrapper" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px', marginTop: '40px' }}>
+                                    <button
+                                        type="button"
+                                        className="btn btn-secondary btn-sm"
+                                        disabled={currentPage === 1}
+                                        onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                                        style={{ opacity: currentPage === 1 ? 0.5 : 1, cursor: currentPage === 1 ? 'not-allowed' : 'pointer' }}
+                                    >
+                                        &laquo; Trang trước
+                                    </button>
+                                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                                        <button
+                                            key={page}
+                                            type="button"
+                                            className={`btn btn-sm ${currentPage === page ? 'btn-primary' : 'btn-outline'}`}
+                                            onClick={() => setCurrentPage(page)}
+                                            style={{ minWidth: '36px' }}
+                                        >
+                                            {page}
+                                        </button>
+                                    ))}
+                                    <button
+                                        type="button"
+                                        className="btn btn-secondary btn-sm"
+                                        disabled={currentPage === totalPages}
+                                        onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                                        style={{ opacity: currentPage === totalPages ? 0.5 : 1, cursor: currentPage === totalPages ? 'not-allowed' : 'pointer' }}
+                                    >
+                                        Trang sau &raquo;
+                                    </button>
+                                </div>
+                            )}
+                        </>
                     )}
                 </div>
             </section>

@@ -23,6 +23,12 @@ export default function CheckoutPage() {
             return;
         }
 
+        const vnPhoneRegex = /^(0[3|5|7|8|9])+([0-9]{8})$/;
+        if (!vnPhoneRegex.test(phone.trim())) {
+            alert('Số điện thoại không hợp lệ! Vui lòng nhập số điện thoại Việt Nam gồm 10 chữ số (bắt đầu bằng 03, 05, 07, 08, 09).');
+            return;
+        }
+
         const randomCode = '#MG-' + Math.floor(100000 + Math.random() * 900000);
         const orderData = {
             code: randomCode,

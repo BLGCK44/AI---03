@@ -102,6 +102,8 @@ export function ShopProvider({ children }) {
                             image: item.image,
                             desc: item.description,
                             reviews: item.reviews_count ? `(${item.reviews_count} đánh giá của khách hàng)` : '(0 đánh giá)',
+                            specs: item.specs || {},
+                            stock: item.stock_quantity !== undefined && item.stock_quantity !== null ? item.stock_quantity : 50
                         };
                     });
                     setCatalog(catalogMap);
@@ -119,7 +121,7 @@ export function ShopProvider({ children }) {
                         code: item.code,
                         customer: item.customer_name,
                         phone: item.customer_phone,
-                        itemsStr: 'Sản phẩm trang trí & decor',
+                        itemsStr: item.items_summary || item.itemsStr || 'Sản phẩm trang trí & decor',
                         totalAmount: item.total_amount,
                         totalFormatted: formatVND(item.total_amount),
                         payment: item.payment_method || 'COD (Tiền mặt)',
@@ -182,6 +184,11 @@ export function ShopProvider({ children }) {
     const addToCart = (productId, qty = 1) => {
         const item = catalog[productId];
         if (!item) return;
+
+        if (item.stock !== undefined && item.stock <= 0) {
+            showToast(`Sản phẩm "${item.title}" hiện đang tạm hết hàng.`);
+            return;
+        }
 
         const existingIndex = cart.findIndex(c => c.id === productId);
         let newCart = [...cart];
@@ -341,6 +348,7 @@ export function ShopProvider({ children }) {
                 code: newOrderObj.code,
                 customer_name: newOrderObj.customer,
                 customer_phone: newOrderObj.phone,
+                items_summary: newOrderObj.itemsStr || 'Sản phẩm trang trí & decor',
                 total_amount: newOrderObj.totalAmount || parseInt((newOrderObj.totalFormatted || '').replace(/\D/g, ''), 10) || 0,
                 payment_method: newOrderObj.payment || 'COD (Tiền mặt)',
                 status: newOrderObj.status || 'pending'
