@@ -1024,14 +1024,20 @@ button, input {
 @media (max-width: 1024px) {
     .hero-card {
         grid-template-columns: 1fr;
+        min-height: auto;
     }
 
     .hero-text-content {
-        padding: 40px 30px;
+        padding: 40px 32px;
     }
 
     .hero-title {
         font-size: 2.2rem;
+    }
+
+    .hero-image-wrapper {
+        min-height: 360px;
+        height: 360px;
     }
 
     .footer-content-grid {
@@ -1051,6 +1057,45 @@ button, input {
 
     .mobile-menu-toggle {
         display: block;
+    }
+
+    .hero-card {
+        grid-template-columns: 1fr;
+        border-radius: 16px;
+    }
+
+    .hero-text-content {
+        padding: 28px 20px;
+        gap: 16px;
+        align-items: flex-start;
+    }
+
+    .hero-tag {
+        font-size: 0.725rem;
+        padding: 4px 12px;
+    }
+
+    .hero-title {
+        font-size: 1.75rem;
+        line-height: 1.25;
+    }
+
+    .hero-description {
+        font-size: 0.925rem;
+        line-height: 1.55;
+    }
+
+    .hero-cta-group {
+        width: 100%;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .hero-image-wrapper {
+        min-height: 260px;
+        height: 260px;
+        border-radius: 0 0 16px 16px;
     }
 
     .values-grid {
@@ -1086,6 +1131,34 @@ button, input {
 }
 
 @media (max-width: 480px) {
+    .hero-card {
+        border-radius: 14px;
+    }
+
+    .hero-text-content {
+        padding: 20px 16px;
+    }
+
+    .hero-title {
+        font-size: 1.5rem;
+    }
+
+    .hero-cta-group {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .hero-cta-group .btn {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .hero-image-wrapper {
+        min-height: 220px;
+        height: 220px;
+    }
+
     .products-grid {
         grid-template-columns: 1fr;
     }
