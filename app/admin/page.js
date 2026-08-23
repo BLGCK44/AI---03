@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useShop, formatVND } from '@/context/ShopContext';
@@ -11,6 +11,7 @@ export default function AdminPage() {
     const { catalog, orders, user, logout, saveProduct, deleteProduct, updateOrderStatus, showToast } = useShop();
 
     const [isMounted, setIsMounted] = useState(false);
+    const hasRedirectedRef = useRef(false);
 
     useEffect(() => {
         setIsMounted(true);
@@ -19,8 +20,11 @@ export default function AdminPage() {
     useEffect(() => {
         if (isMounted) {
             if (!user || user.role !== 'admin') {
-                showToast('Vui lòng đăng nhập quyền Quản trị viên để truy cập!');
-                router.push('/login');
+                if (!hasRedirectedRef.current) {
+                    hasRedirectedRef.current = true;
+                    showToast('Vui lòng đăng nhập quyền Quản trị viên để truy cập!');
+                    router.push('/login');
+                }
             }
         }
     }, [isMounted, user, router, showToast]);

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 
 import { createClient } from '@/utils/supabase/client';
 
@@ -177,13 +177,13 @@ export function ShopProvider({ children }) {
         }
     };
 
-    const showToast = (message) => {
+    const showToast = useCallback((message) => {
         const id = Date.now() + Math.random();
         setToasts(prev => [...prev, { id, message }]);
         setTimeout(() => {
             setToasts(prev => prev.filter(t => t.id !== id));
         }, 3000);
-    };
+    }, []);
 
     const addToCart = (productId, qty = 1) => {
         const item = catalog[productId];
